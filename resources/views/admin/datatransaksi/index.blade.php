@@ -5,7 +5,7 @@
             <div class="page-header">
                 <h3 class="page-title">
                     <span class="page-title-icon bg-gradient-primary text-white me-2">
-                        <i class="mdi mdi-transfer"></i>
+                        <i class="mdi mdi-swap-horizontal"></i>
                     </span> Data Transaksi
                 </h3>
             </div>
@@ -53,7 +53,7 @@
                         <div class="mb-3">
                             <label for="jenis" class="form-label">Jenis</label>
                             <select class="form-select" name="jenis" id="jenis">
-                                <option value="">Pilih Jenis</option>
+                                <option value="">Jenis</option>
                                 <option class="text-capitalize" value="masuk"
                                     {{ old('jenis') == 'masuk' ? 'selected' : '' }}>Masuk</option>
                                 <option class="text-capitalize" value="keluar"
@@ -107,7 +107,7 @@
                         <div class="mb-3">
                             <label for="edit_jenis" class="form-label">Jenis</label>
                             <select class="form-select" name="jenis" id="edit_jenis">
-                                <option value="">Pilih Jenis</option>
+                                <option value="">Jenis</option>
                                 <option class="text-capitalize" value="masuk"
                                     {{ old('jenis') == 'masuk' ? 'selected' : '' }}>
                                     Masuk</option>
@@ -157,7 +157,36 @@
             {{-- Tabel Data Transaksi --}}
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Daftar Transaksi</h5>
+                    <form method="GET" class="row g-3 mb-3 align-items-end">
+                        <div class="col-auto">
+                            <select name="jenis" class="form-select">
+                                <option value="">-- Jenis --</option>
+                                <option value="masuk" {{ request('jenis') == 'masuk' ? 'selected' : '' }}>Masuk</option>
+                                <option value="keluar" {{ request('jenis') == 'keluar' ? 'selected' : '' }}>Keluar
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" name="start_date" class="form-control"
+                                value="{{ request('start_date') }}">
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" name="end_date" class="form-control"
+                                value="{{ request('end_date') }}">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="mdi mdi-filter"></i> Filter
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <a href="{{ route('transaksi.rekap', request()->only(['jenis', 'start_date', 'end_date'])) }}"
+                                class="btn btn-success" target="_blank">
+                                <i class="mdi mdi-file-pdf"></i> Rekap
+                            </a>
+                        </div>
+                    </form>
+
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -179,13 +208,16 @@
                                         <td>{{ $loop->iteration }}</td>
 
                                         <td>{{ $transaksi->tanggal }}</td>
-                                        <td>{{ $transaksi->jenis }}</td>
+                                        <td class="text-capitalize">{{ $transaksi->jenis }}</td>
                                         <td>{{ $transaksi->jumlah }}</td>
 
                                         <td>{{ $transaksi->catatan ?? '-' }}</td>
                                         <td>
-                                            <button class="btn btn-warning btnEditTransaksi"
-                                                data-transaksi='@json($transaksi)'>Edit</button>
+                                            <button
+                                                class="btn
+                                            btn-warning btnEditTransaksi"
+                                                data-transaksi='@json($transaksi)'>
+                                                Edit</button>
                                             <button class="btn btn-danger btnHapusTransaksi"
                                                 data-transaksi='@json($transaksi)' data-bs-toggle="modal"
                                                 data-bs-target="#modalHapusTransaksi">
@@ -237,6 +269,9 @@
                     $('#formTambahTransaksi').slideUp();
                     $('#formEditTransaksi').slideDown();
                 })
+                $('#btnCloseEditForm').on('click', function() {
+                    $('#formEditTransaksi').slideUp();
+                });
 
                 $('.btnHapusTransaksi').on('click', function() {
                     const transaksi = $(this).data('transaksi');

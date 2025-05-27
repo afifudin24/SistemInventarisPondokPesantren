@@ -6,20 +6,42 @@ use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Barang;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaksiController extends Controller {
     public function index( Request $request ) {
         $query = Transaksi::query();
+        if ( $request->filled( 'jenis' ) ) {
+            $query->where( 'jenis', $request->jenis );
+        }
 
         // Filter berdasarkan tanggal jika ada input
         if ( $request->filled( 'start_date' ) && $request->filled( 'end_date' ) ) {
-            $query->whereBetween( 'created_at', [ $request->start_date, $request->end_date ] );
+            $query->whereBetween( 'tanggal', [ $request->start_date, $request->end_date ] );
         }
         $barangs = Barang::all();
         // Paginate hasil ( 10 per halaman )
         $transaksis = $query->latest()->paginate( 10 )->withQueryString();
 
         return view( 'admin.datatransaksi.index', compact( 'transaksis', 'barangs' ) );
+    }
+
+    public function cetakPDF( Request $request ) {
+        $query = Transaksi::query();
+
+        // Filter jika ada
+        if ( $request->filled( 'jenis' ) ) {
+            $query->where( 'jenis', $request->jenis );
+        }
+
+        if ( $request->filled( 'start_date' ) && $request->filled( 'end_date' ) ) {
+            $query->whereBetween( 'tanggal', [ $request->start_date, $request->end_date ] );
+        }
+
+        $transaksis = $query->get();
+
+        $pdf = Pdf::loadView( 'admin.datatransaksi.rekap-pdf', compact( 'transaksis' ) );
+        return $pdf->download( 'rekap-transaksi.pdf' );
     }
 
     public function store( Request $request ) {

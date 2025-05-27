@@ -8,13 +8,15 @@ class Transaksi extends Model {
     use HasFactory;
     protected $table = 'transaksi';
     protected $primaryKey = 'transaksi_id';
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
         'tanggal',
         'barang_id',
         'jenis',
         'status',
         'catatan',
+        'created_at',
+        'updated_at',
     ];
 
     // buat relasi dengan barang

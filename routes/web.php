@@ -34,6 +34,7 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
 
     // transaksibarang
     Route::get('/transaksibarang', [TransaksiController::class,'index'])->name('transaksibarang.index');
+    Route::get('/transaksi/rekap/pdf', [TransaksiController::class, 'cetakPDF'])->name('transaksi.rekap');
     Route::post('/transaksibarang', [TransaksiController::class,'store'])->name('transaksibarang.store');
     Route::put('/transaksibarang/{transaksibarang}', [TransaksiController::class,'update'])->name('transaksibarang.update');
     Route::delete('/transaksibarang/{transaksibarang}', [TransaksiController::class,'destroy'])->name('transaksibarang.destroy');
