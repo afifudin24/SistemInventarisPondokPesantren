@@ -15,6 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     @vite(['resources/vendors/js/vendor.bundle.base.js', 'resources/js/bootstrap.js', 'resources/js/dashboard.js', 'resources/js/dashboard-dark.js', 'resources/js/jquery.cookie.js', 'resources/js/jquery-file-upload.js', 'resources/js/settings.js', 'resources/js/chart.js'])
+    @stack('scripts')
     <!-- End custom js for this page -->
   </body>
 </html>

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Sistem Inventaris Barang Pondok Pesantren Al Falah Rawalo</title>
 
 
         <!-- Fonts -->
@@ -54,10 +54,18 @@
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex w-9/12  text-center  flex-col-reverse lg:w-7/12 mx-auto lg:flex-row">
                 <div class="p-6 mx-auto bg-white dark:bg-[#1A1A1A] rounded-lg shadow-lg">
-                    <h1 class="text-4xl font-bold leading-tight tracking-tight text-[#1b1b18] dark:text-[#EDEDEC] sm:text-5xl md:text-6xl">
+                    <img class="mx-auto" src="{{ asset('images/ponpesalfalah.png') }}" alt="">
+                    <h1 class="text-2xl font-bold leading-tight tracking-tight text-[#1b1b18] dark:text-[#EDEDEC] sm:text-4xl md:text-4xl">
 
-                        <span class="block">Sistem Inventaris Pondok Pesantren</span>
+                        <span class="block">Sistem Inventaris</span>
+                        <span class="block">Pondok Pesantren Al Falah Rawalo</span>
+                        
                     </h1>
+                   <p class="mt-4 text-base text-gray-700 dark:text-gray-300">
+    Selamat datang di Sistem Inventaris Pondok Pesantren Al Falah Rawalo.  
+    Silakan gunakan sistem ini untuk mengelola data barang, peminjaman, dan pengembalian dengan mudah dan efisien.
+</p>
+
                 </div>
             </main>
         </div>

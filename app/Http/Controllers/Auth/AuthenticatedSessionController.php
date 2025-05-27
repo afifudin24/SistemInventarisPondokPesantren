@@ -27,19 +27,8 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        $user = auth()->user();
-
-        // Arahkan berdasarkan role
-        switch ($user->role) {
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            case 'pemilik':
-                return redirect()->route('pemilik.dashboard');
-            case 'peminjam':
-                return redirect()->route('peminjam.dashboard');
-            default:
-                return redirect()->route('dashboard'); // fallback
-        }
+    //    arahkan ke dashboard
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
 
