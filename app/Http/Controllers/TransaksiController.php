@@ -53,17 +53,32 @@ class TransaksiController extends Controller {
             'jumlah' => 'required|numeric',
         ] );
 
+        $barang = Barang::findOrFail( $request->barang_id );
+
+        // Pengecekan jika jenis keluar
+        if ( $request->jenis == 'keluar' ) {
+            if ( $barang->jumlah < $request->jumlah ) {
+                return redirect()->back()->withErrors( [ 'jumlah' => 'Jumlah barang tidak mencukupi untuk dikeluarkan.' ] );
+            }
+        }
+
         // Simpan data transaksi
         $transaksi = new Transaksi();
-
-        // Atau bisa diisi manual jika dari input
         $transaksi->barang_id = $request->barang_id;
         $transaksi->jenis = $request->jenis;
         $transaksi->catatan = $request->catatan;
         $transaksi->jumlah = $request->jumlah;
         $transaksi->tanggal = Carbon::today();
-        // tanggal hari ini
         $transaksi->save();
+
+        // Update jumlah barang
+        if ( $request->jenis == 'masuk' ) {
+            $barang->jumlah = ( int )$barang->jumlah + ( int )$request->jumlah;
+        } else {
+            $barang->jumlah = ( int )$barang->jumlah - ( int )$request->jumlah;
+        }
+
+        $barang->save();
 
         return redirect()->back()->with( 'success', 'Transaksi berhasil ditambahkan.' );
     }

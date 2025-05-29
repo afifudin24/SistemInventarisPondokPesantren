@@ -5,7 +5,7 @@
             <div class="page-header">
                 <h3 class="page-title">
                     <span class="page-title-icon bg-gradient-primary text-white me-2">
-                        <i class="mdi mdi-home"></i>
+                        <i class="mdi mdi-account"></i>
                     </span> Data User
                 </h3>
             </div>
@@ -34,7 +34,7 @@
                     </button>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="col-lg-12">
                         {{-- form tambah user --}}
                         {{-- akhir form tambah user --}}
                         <div class="card">
@@ -43,7 +43,7 @@
                             {{-- form tambah user --}}
                             <div id="formTambahUser" class="card mt-3"
                                 style="display: {{ $errors->any() ? 'block' : 'none' }};">
-                                <div class="card-body position-relative">
+                                <div class="card-body">
                                     <!-- Tombol Close -->
                                     <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
                                         aria-label="Close" id="btnCloseForm"></button>
@@ -137,7 +137,10 @@
                             </div>
                             {{-- akhir form edit user --}}
                             <div class="card-body">
-                                <table class="table">
+                                <div class="table-responsive">
+
+                                
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -178,6 +181,7 @@
                                         @endif
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                             <div class="d-flex justify-content-end mx-2 my-2">
                                 {!! $users->links('pagination::bootstrap-5') !!}

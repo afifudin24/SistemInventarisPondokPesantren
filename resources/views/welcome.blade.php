@@ -54,7 +54,7 @@
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex w-9/12  text-center  flex-col-reverse lg:w-7/12 mx-auto lg:flex-row">
                 <div class="p-6 mx-auto bg-white dark:bg-[#1A1A1A] rounded-lg shadow-lg">
-                    <img class="mx-auto" src="{{ asset('images/ponpesalfalah.png') }}" alt="">
+                    <img class="mx-auto img-thumbnail w-48" src="{{ asset('images/ponpesalfalah.jpeg') }}" alt="">
                     <h1 class="text-2xl font-bold leading-tight tracking-tight text-[#1b1b18] dark:text-[#EDEDEC] sm:text-4xl md:text-4xl">
 
                         <span class="block">Sistem Inventaris</span>
