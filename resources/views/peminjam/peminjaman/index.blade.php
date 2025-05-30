@@ -199,6 +199,7 @@
                                             @elseif ($peminjaman->status == 'Selesai')
                                                 -
                                                 
+
                                             @else
                                                 <button class="btn btn-secondary btnBatalkanpeminjaman"
                                                     data-peminjaman='@json($peminjaman)' data-bs-toggle="modal"
@@ -263,7 +264,7 @@
                 $('.btnHapuspeminjaman').on('click', function() {
                     const peminjaman = $(this).data('peminjaman');
                     console.log(peminjaman);
-                    $('#formHapuspeminjaman').attr('action', `/peminjamanbarang/${peminjaman.peminjaman_id}`);
+                    $('#formHapuspeminjaman').attr('action', `/peminjaman/${peminjaman.peminjaman_id}`);
                 });
             });
         </script>

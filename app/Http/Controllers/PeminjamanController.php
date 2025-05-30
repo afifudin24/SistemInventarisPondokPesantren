@@ -147,4 +147,5 @@ class PeminjamanController extends Controller {
         $pdf = Pdf::loadView( 'peminjam.peminjaman.cetakbukti', compact( 'peminjaman' ) );
         return $pdf->download( 'bukti-verifikasi.pdf' );
     }
+
 }
