@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 // gunakan use auth
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +8,6 @@ use App\Models\Transaksi;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\User;
-
 class DashboardController extends Controller {
     public function index() {
         $user = Auth::user();
@@ -27,9 +24,13 @@ class DashboardController extends Controller {
         } else {
             $barangcount = Barang::count();
             $pinjamcount = Peminjaman::where( 'user_id', Auth::user()->id )->count();
-            return view( 'peminjam.dashboard.index', compact( 'barangcount', 'pinjamcount' ) );
+          $kembalikancount = Pengembalian::whereHas('peminjaman', function ($query) {
+        $query->where('user_id', Auth::id());
+    })
+    ->where('status', 'Dikonfirmasi')
+    ->count();
+            return view( 'peminjam.dashboard.index', compact( 'barangcount', 'pinjamcount', 'kembalikancount' ) );
         }
         // kasih kondisi role
-
     }
 }

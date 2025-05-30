@@ -84,7 +84,7 @@
                                                 <button class="btn btn-secondary btnDetailPengembalian"
                                                     data-bs-toggle="modal" data-bs-target="#detailModal"
                                                     data-peminjaman='@json($peminjaman)'>
-                                                    Detail
+                                                    Detail Pengembalian
                                                 </button>
                                             @else
                                                 <button class="btn btn-info btnKembalikan" data-bs-toggle="modal"
@@ -118,7 +118,7 @@
                         <div class="modal-content">
                             <!-- Header -->
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Detail Barang</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Detail Pengembalian</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
@@ -151,6 +151,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
 
     {{-- modal hapus peminjaman --}}

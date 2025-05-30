@@ -12,6 +12,23 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class PengembalianController extends Controller {
+
+    public function index( Request $request ) {
+        // kasih query misal filter berdasarkan start_date dan end_date
+
+        $query = Pengembalian::with( [ 'peminjaman.barang', 'peminjaman.user' ] )
+        ->whereIn( 'status', [ 'Menunggu Konfirmasi', 'Tidak Sesuai' ] );
+
+        // Jika terdapat query startdate dan enddate
+        if ( $request->filled( 'start_date' ) && $request->filled( 'end_date' ) ) {
+            $query->whereBetween( 'tanggal_kembali', [ $request->start_date, $request->end_date ] );
+        }
+
+        $pengembalians = $query->paginate( 10 );
+
+        return view( 'pengurus.konfirmasipengembalianbarang.index', compact( 'pengembalians' ) );
+    }
+
     public function store( Request $request ) {
         // Validasi input
         $request->validate( [
@@ -50,5 +67,24 @@ class PengembalianController extends Controller {
 
         return redirect()->route( 'riwayatpeminjamanbarang.index' )->with( 'success', 'Pengembalian berhasil disimpan, silahkan menunggu konfirmasi.' );
 
+    }
+
+    public function update( Request $request, $id ) {
+        $pengembalian =  Pengembalian::with( [ 'peminjaman.barang', 'peminjaman.user' ] )->findOrFail( $id );
+        $barang = Barang::where( 'barang_id', $pengembalian->peminjaman->barang_id )->first();
+        $peminjaman = Peminjaman::where( 'peminjaman_id', $pengembalian->peminjaman_id )->first();
+        $pengembalian->jumlah_kembali = $request->jumlah_kembali;
+        $pengembalian->status = $request->status;
+        if ( $pengembalian->jumlah_kembali < $pengembalian->peminjaman->jumlah_pinjam ) {
+            $pengembalian->status = 'Tidak Sesuai';
+        } else {
+            $barang->jumlah += $pengembalian->jumlah_kembali;
+            $barang->save();
+            $peminjaman->status = 'Selesai';
+        }
+        $pengembalian->kondisi = $request->kondisi;
+        $pengembalian->save();
+
+        return redirect()->route( 'konfirmasipengembalianbarang.index' )->with( 'success', 'Pengembalian berhasil diperbarui.' );
     }
 }

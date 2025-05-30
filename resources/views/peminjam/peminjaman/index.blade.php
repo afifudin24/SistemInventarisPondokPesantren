@@ -56,6 +56,10 @@
                             <label for="jumlah" class="form-label">Jumlah</label>
                             <input type="number" class="form-control" name="jumlah" id="jumlah">
                         </div>
+                          <div class="mb-3">
+                            <label for="edit_keperluan" class="form-label">Keperluan</label>
+                          <textarea name="keperluan" id="edit_keperluan" class="form-control" cols="30" rows="10"></textarea>
+                        </div>
 
                        
                         <button type="submit" class="btn btn-success">Simpan</button>
@@ -92,6 +96,10 @@
                         <div class="mb-3">
                             <label for="edit_jumlah" class="form-label">Jumlah</label>
                             <input type="number" class="form-control" name="jumlah" id="edit_jumlah">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_keperluan" class="form-label">Keperluan</label>
+                          <textarea name="keperluan" id="edit_keperluan" class="form-control" cols="30" rows="10"></textarea>
                         </div>
                       
                         <button type="submit" class="btn btn-success">Simpan Perubahan</button>
@@ -187,12 +195,19 @@
                                                     data-bs-target="#modalHapuspeminjaman">
                                                     Hapus
                                                 </button>
+
+                                            @elseif ($peminjaman->status == 'Selesai')
+                                                -
+                                                
                                             @else
                                                 <button class="btn btn-secondary btnBatalkanpeminjaman"
                                                     data-peminjaman='@json($peminjaman)' data-bs-toggle="modal"
                                                     data-bs-target="#modalBatalkanpeminjaman">
                                                     Batalkan
                                                 </button>
+                                                <a href="{{ route('peminjaman.cetak', $peminjaman->peminjaman_id) }}" class="btn btn-info">
+                                                    Cetak Bukti Verifikasi
+                                                </a>
                                             @endif
                                         </td>
 
@@ -236,6 +251,7 @@
                     $('#edit_jenis').val(peminjaman.jenis);
                     $('#edit_jumlah').val(peminjaman.jumlah);
                     $('#edit_catatan').val(peminjaman.catatan);
+                    $('#edit_keperluan').val(peminjaman.keperluan);
                     $('#editpeminjamanForm').attr('action', `/peminjamanbarang/${peminjaman.peminjaman_id}`);
                     $('#formTambahpeminjaman').slideUp();
                     $('#formEditpeminjaman').slideDown();

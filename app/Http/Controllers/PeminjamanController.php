@@ -5,6 +5,7 @@ use App\Models\Peminjaman;
 use App\Models\Barang;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller {
     //
@@ -35,9 +36,11 @@ class PeminjamanController extends Controller {
         $request->validate( [
             'barang_id' => 'required|exists:barang,barang_id',
             'jumlah' => 'required|integer|min:1',
+            'keperluan' => 'required',
         ], [
             'barang_id.required' => 'Barang harus dipilih.',
             'barang_id.exists' => 'Barang yang dipilih tidak valid.',
+            'keperluan.required' => 'Kolom keperluan wajib diisi.',
             'jumlah.required' => 'Jumlah peminjaman harus diisi.',
             'jumlah.integer' => 'Jumlah peminjaman harus berupa angka.',
             'jumlah.min' => 'Jumlah peminjaman minimal 1.',
@@ -55,6 +58,7 @@ class PeminjamanController extends Controller {
         $peminjaman->user_id = $user->id;
         $peminjaman->barang_id = $request->barang_id;
         $peminjaman->jumlah_pinjam = $request->jumlah;
+        $peminjaman->keperluan = $request->keperluan;
         $peminjaman->tanggal_pinjam = Carbon::today();
         $peminjaman->save();
 
@@ -133,5 +137,14 @@ class PeminjamanController extends Controller {
 
         return back()->with( 'success', 'Peminjaman berhasil dihapus.' );
 
+    }
+
+    public function cetakVerifikasi( $id ) {
+        $peminjaman = Peminjaman::with( 'barang', 'user' )->findOrFail( $id );
+        if ( $peminjaman->user_id !== Auth::user()->id ) {
+            abort( 403, 'Anda tidak memiliki akses.' );
+        }
+        $pdf = Pdf::loadView( 'peminjam.peminjaman.cetakbukti', compact( 'peminjaman' ) );
+        return $pdf->download( 'bukti-verifikasi.pdf' );
     }
 }

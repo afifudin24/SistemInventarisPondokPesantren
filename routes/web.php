@@ -61,6 +61,10 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
         // peminjaman
         Route::get('/verifikasipeminjamanbarang', [PeminjamanController::class,'verifikasipeminjamanlist'])->name('verifikasipeminjamanbarang.index');
         Route::put('/peminjaman/updatestatus/{id}', [PeminjamanController::class, 'updateStatus'])->name('peminjaman.updatestatus');
+
+        // konfirmasi pengembalian barang
+         Route::get('/konfirmasipengembalianbarang', [PengembalianController::class, 'index'])->name('konfirmasipengembalianbarang.index');
+         Route::put('/pengembalian/update/{id}', [PengembalianController::class, 'update'])->name('pengembalian.updatestatus');
     });
 
      Route::middleware(RoleMiddleware::class . ':peminjam')->group(function () {
@@ -68,12 +72,16 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post('/ajuanpeminjamanbarang', [PeminjamanController::class,'store'])->name('peminjamanbarang.store');
         Route::delete('/ajuanpeminjamanbarang/{id}', [PeminjamanController::class,'destroy'])->name('peminjamanbarang.destroy');
           Route::get('/ajuanpeminjamanbarang/rekap/pdf', [PeminjamanController::class, 'cetakPDF'])->name('peminjaman.rekap');
+        //   cetak bukti verifikasi
+        Route::get('/buktiverifikasi/{id}', [PeminjamanController::class, 'cetakVerifikasi'])->name('peminjaman.cetak');
 
         //   riwayatpeminjaman
         Route::get('riwayatpeminjamanbarang', [PeminjamanController::class, 'riwayatPeminjaman'])->name('riwayatpeminjamanbarang.index');
 
         // pengembalian peminjaman
         Route::post('/pengembalianpeminjamanbarang', [PengembalianController::class, 'store'])->name('pengembalian.store');
+       
+
     });
 
     Route::middleware(RoleMiddleware::class . ':pengurus,peminjam')->group(function () {

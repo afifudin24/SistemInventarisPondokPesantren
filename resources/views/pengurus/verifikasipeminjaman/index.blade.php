@@ -12,10 +12,10 @@
 
             {{-- Tampilkan alert --}}
             @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}
-
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
+                <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-center"
+                    role="alert">
+                    <div>{{ session('success') }}</div>
+                    <button type="button" class="btn-close ms-3" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
@@ -47,7 +47,7 @@
                                 <i class="mdi mdi-filter"></i> Filter
                             </button>
                         </div>
-                     
+
                     </form>
 
                     <div class="table-responsive">
@@ -78,49 +78,57 @@
 
                                         <td>{{ $peminjaman->status }}</td>
                                         <td>
-                                            @if($peminjaman->status == 'Menunggu Verifikasi')
-                                            <form action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="hidden" name="status" value="Ditolak">
-                                                <button type="submit" class="btn btn-danger">Tolak</button>
-                                            </form>
+                                            @if ($peminjaman->status == 'Menunggu Verifikasi')
+                                                <form
+                                                    action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="Ditolak">
+                                                    <button type="submit" class="btn btn-danger">Tolak</button>
+                                                </form>
 
-                                            <form action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="hidden" name="status" value="Diverifikasi">
-                                                <button type="submit" class="btn btn-success">Verifikasi</button>
-                                            </form>
+                                                <form
+                                                    action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="Diverifikasi">
+                                                    <button type="submit" class="btn btn-success">Verifikasi</button>
+                                                </form>
                                             @endif
 
-                                            @if($peminjaman->status == 'Diverifikasi')
-                                            <form action="{{ route('peminjaman.batalkan', $peminjaman->peminjaman_id) }}" method="POST" class="d-inline">
-                @csrf
-                @method('PUT')
-                <button type="submit" class="btn btn-warning">Batalkan</button>
-            </form>
+                                            @if ($peminjaman->status == 'Diverifikasi')
+                                                <form
+                                                    action="{{ route('peminjaman.batalkan', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-warning">Batalkan</button>
+                                                </form>
                                             @endif
 
-                                            @if($peminjaman->status == 'Ditolak')
-                                            
-                                            <form action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="hidden" name="status" value="Diverifikasi">
-                                                <button type="submit" class="btn btn-success">Verifikasi</button>
-                                            </form>
+                                            @if ($peminjaman->status == 'Ditolak')
+                                                <form
+                                                    action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="Diverifikasi">
+                                                    <button type="submit" class="btn btn-success">Verifikasi</button>
+                                                </form>
                                             @endif
 
-                                            @if($peminjaman->status == 'Dibatalkan')
-                                               <button class="btn btn-danger btnHapuspeminjaman"
+                                            @if ($peminjaman->status == 'Dibatalkan')
+                                                <button class="btn btn-danger btnHapuspeminjaman"
                                                     data-peminjaman='@json($peminjaman)' data-bs-toggle="modal"
                                                     data-bs-target="#modalHapuspeminjaman">
                                                     Hapus
                                                 </button>
+                                            @endif
+
+                                            @if ($peminjaman->status == 'Selesai')
+                                                -
                                             @endif
 
                                         </td>
@@ -142,67 +150,66 @@
         </div>
     </div>
 
-     {{-- modal hapus peminjaman --}}
-            <div class="modal fade" id="modalHapuspeminjaman" tabindex="-1" aria-labelledby="modalHapuspeminjamanLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form id="formHapuspeminjaman" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalHapusUserLabel">Konfirmasi Hapus</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Tutup"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Apakah Anda yakin ingin menghapus peminjaman?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                            </div>
-                        </form>
+    {{-- modal hapus peminjaman --}}
+    <div class="modal fade" id="modalHapuspeminjaman" tabindex="-1" aria-labelledby="modalHapuspeminjamanLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formHapuspeminjaman" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalHapusUserLabel">Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
-                </div>
+                    <div class="modal-body">
+                        <p>Apakah Anda yakin ingin menghapus peminjaman?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#btnShowForm').on('click', function() {
-                    $('#formTambahpeminjaman').slideDown();
+        @push('scripts')
+            <script>
+                $(document).ready(function() {
+                    $('#btnShowForm').on('click', function() {
+                        $('#formTambahpeminjaman').slideDown();
+                    });
+                    $('#btnCloseForm').on('click', function() {
+                        $('#formTambahpeminjaman').slideUp();
+                    });
+
+                    $(".btnEditpeminjaman").on("click", function() {
+                        console.log("oke");
+                        const peminjaman = $(this).data('peminjaman');
+                        $('#edit_id').val(peminjaman.peminjaman_id);
+                        // tentukan barang selected berdasarkan peminjaman.barang_id, ini pake nya select option
+
+                        $('#edit_barang_id').val(peminjaman.barang_id);
+
+                        $('#edit_user_id').val(peminjaman.user_id);
+                        $('#edit_tanggal').val(peminjaman.tanggal);
+                        $('#edit_jenis').val(peminjaman.jenis);
+                        $('#edit_jumlah').val(peminjaman.jumlah);
+                        $('#edit_catatan').val(peminjaman.catatan);
+                        $('#editpeminjamanForm').attr('action', `/peminjamanbarang/${peminjaman.peminjaman_id}`);
+                        $('#formTambahpeminjaman').slideUp();
+                        $('#formEditpeminjaman').slideDown();
+                    })
+                    $('#btnCloseEditForm').on('click', function() {
+                        $('#formEditpeminjaman').slideUp();
+                    });
+
+                    $('.btnHapuspeminjaman').on('click', function() {
+                        const peminjaman = $(this).data('peminjaman');
+                        console.log(peminjaman);
+                        $('#formHapuspeminjaman').attr('action', `/peminjaman/${peminjaman.peminjaman_id}`);
+                    });
                 });
-                $('#btnCloseForm').on('click', function() {
-                    $('#formTambahpeminjaman').slideUp();
-                });
-
-                $(".btnEditpeminjaman").on("click", function() {
-                    console.log("oke");
-                    const peminjaman = $(this).data('peminjaman');
-                    $('#edit_id').val(peminjaman.peminjaman_id);
-                    // tentukan barang selected berdasarkan peminjaman.barang_id, ini pake nya select option
-
-                    $('#edit_barang_id').val(peminjaman.barang_id);
-
-                    $('#edit_user_id').val(peminjaman.user_id);
-                    $('#edit_tanggal').val(peminjaman.tanggal);
-                    $('#edit_jenis').val(peminjaman.jenis);
-                    $('#edit_jumlah').val(peminjaman.jumlah);
-                    $('#edit_catatan').val(peminjaman.catatan);
-                    $('#editpeminjamanForm').attr('action', `/peminjamanbarang/${peminjaman.peminjaman_id}`);
-                    $('#formTambahpeminjaman').slideUp();
-                    $('#formEditpeminjaman').slideDown();
-                })
-                $('#btnCloseEditForm').on('click', function() {
-                    $('#formEditpeminjaman').slideUp();
-                });
-
-                $('.btnHapuspeminjaman').on('click', function() {
-                    const peminjaman = $(this).data('peminjaman');
-                    console.log(peminjaman);
-                    $('#formHapuspeminjaman').attr('action', `/peminjaman/${peminjaman.peminjaman_id}`);
-                });
-            });
-        </script>
-    @endpush
-@endsection
+            </script>
+        @endpush
+    @endsection
