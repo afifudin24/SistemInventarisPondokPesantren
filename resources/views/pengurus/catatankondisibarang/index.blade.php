@@ -5,8 +5,8 @@
             <div class="page-header">
                 <h3 class="page-title">
                     <span class="page-title-icon bg-gradient-primary text-white me-2">
-                        <i class="mdi mdi-package-variant"></i>
-                    </span> Data Barang
+                        <i class="mdi mdi-note-outline"></i>
+                    </span> Catatan Kondisi  Barang
                 </h3>
             </div>
             @if (session('success'))
