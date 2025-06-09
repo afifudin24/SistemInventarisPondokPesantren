@@ -8,6 +8,7 @@ use App\Models\Peminjaman;
 use App\Models\Barang;
 // use auth
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 // use carbon
 use Carbon\Carbon;
 
@@ -16,8 +17,7 @@ class PengembalianController extends Controller {
     public function index( Request $request ) {
         // kasih query misal filter berdasarkan start_date dan end_date
 
-        $query = Pengembalian::with( [ 'peminjaman.barang', 'peminjaman.user' ] )
-        ->whereIn( 'status', [ 'Menunggu Konfirmasi', 'Tidak Sesuai' ] );
+        $query = Pengembalian::with( [ 'peminjaman.barang', 'peminjaman.user' ] );
 
         // Jika terdapat query startdate dan enddate
         if ( $request->filled( 'start_date' ) && $request->filled( 'end_date' ) ) {
@@ -80,11 +80,28 @@ class PengembalianController extends Controller {
         } else {
             $barang->jumlah += $pengembalian->jumlah_kembali;
             $barang->save();
-            $peminjaman->status = 'Selesai';
+            $peminjaman->status = 'Sudah Dikembalikan';
         }
         $pengembalian->kondisi = $request->kondisi;
         $pengembalian->save();
 
         return redirect()->route( 'konfirmasipengembalianbarang.index' )->with( 'success', 'Pengembalian berhasil diperbarui.' );
     }
+
+    public function cetakBuktiPengembalian( $id ) {
+        $user = Auth::user();
+        $pengembalian = Pengembalian::with( [ 'peminjaman.barang', 'peminjaman.user' ] )->findOrFail( $id );
+        if (
+            !(
+                $user->role === 'pengurus' ||
+                ( $user->role === 'peminjam' && $user->id === $pengembalian->peminjaman->user_id )
+            )
+        ) {
+            abort( 403, 'Anda tidak memiliki akses.' );
+        }
+        $pdf = Pdf::loadView( 'pengurus.konfirmasipengembalianbarang.cetakbuktipengembalian', compact( 'pengembalian' ) );
+        return $pdf->stream( 'bukti-pengembalian.pdf' );
+
+    }
+
 }

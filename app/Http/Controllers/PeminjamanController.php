@@ -26,7 +26,7 @@ class PeminjamanController extends Controller {
     }
 
     public function riwayatPeminjaman() {
-        $peminjamans = Peminjaman::with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->where( 'status',  'Diverifikasi' )->paginate( 10 );
+        $peminjamans = Peminjaman::with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->where( 'status',  'Diambil' )->paginate( 10 );
 
         return view( 'peminjam.riwayatpeminjamanbarang.index', compact( 'peminjamans' ) );
     }
@@ -50,8 +50,16 @@ class PeminjamanController extends Controller {
         $user = Auth::user();
 
         $barang = Barang::where( 'barang_id', $request->barang_id )->first();
+        $riwayatpeminjaman = Peminjaman::where( 'user_id', $user->id )
+        ->where( 'barang_id', $request->barang_id )
+        ->where( 'status', '!=', 'Sudah Dikembalikan' )
+        ->first();
 
-        if ( $barang->jumlah < $request->jumlah_pinjam ) {
+        // misal data ada maka redirect back with error
+        if ( $riwayatpeminjaman ) {
+            return redirect()->back()->withErrors( [ 'barang_id' => 'Anda sudah meminjam barang ini sebelumnya dan belum dikembalikan.' ] );
+        }
+        if ( $barang->jumlah < $request->jumlah ) {
             return redirect()->back()->withErrors( [ 'jumlah' => 'Jumlah barang tidak mencukupi.' ] );
         }
         $peminjaman = new Peminjaman;
@@ -90,7 +98,7 @@ class PeminjamanController extends Controller {
         $peminjaman = Peminjaman::where( 'peminjaman_id', $id )->first();
         $barang = Barang::where( 'barang_id', $peminjaman->barang_id )->first();
         if ( $request->status === 'Diverifikasi' ) {
-            $barang->jumlah = $barang->jumlah -= $peminjaman->jumlah_pinjam;
+
             $barang->save();
         }
 
@@ -122,6 +130,28 @@ class PeminjamanController extends Controller {
         return back()->with( 'success', 'Peminjaman berhasil dibatalkan.' );
     }
 
+    public function diambil( $id ) {
+        $peminjaman = Peminjaman::findOrFail( $id );
+        $user = Auth::user();
+        if (
+            !(
+                $user->role === 'pengurus' ||
+                ( $user->role === 'peminjam' && $user->id === $peminjaman->user_id )
+            )
+        ) {
+            abort( 403, 'Anda tidak memiliki akses.' );
+        }
+        $barang = Barang::where( 'barang_id', $peminjaman->barang_id )->first();
+        $barang->jumlah = $barang->jumlah -= $peminjaman->jumlah_pinjam;
+
+        // $barang->jumlah = $barang->jumlah += $peminjaman->jumlah_pinjam;
+        $barang->save();
+        $peminjaman->status = 'Diambil';
+        $peminjaman->save();
+
+        return back()->with( 'success', 'Barang telah diambil.' );
+    }
+
     public function destroy( $id ) {
         $peminjaman = Peminjaman::findOrFail( $id );
         $user = Auth::user();
@@ -146,6 +176,24 @@ class PeminjamanController extends Controller {
         }
         $pdf = Pdf::loadView( 'peminjam.peminjaman.cetakbukti', compact( 'peminjaman' ) );
         return $pdf->download( 'bukti-verifikasi.pdf' );
+    }
+
+    public function cetakPDF( Request $request ) {
+        $query = Peminjaman::query();
+
+        if ( $request->filled( 'start_date' ) && $request->filled( 'end_date' ) ) {
+            $query->whereBetween( 'tanggal_pinjam', [ $request->start_date, $request->end_date ] );
+        }
+        if ( Auth::user()->role == 'pengurus' ) {
+            $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->get();
+            $pdf = Pdf::loadView( 'pengurus.verifikasipeminjaman.cetak', compact( 'peminjaman' ) );
+            return $pdf->download( 'rekap-peminjaman.pdf' );
+        } else {
+            $pdf = Pdf::loadView( 'peminjam.riwayatpeminjamanbarang.cetak', compact( 'peminjaman' ) );
+            return $pdf->download( 'rekap-transaksi.pdf' );
+            $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->get();
+        }
+
     }
 
 }

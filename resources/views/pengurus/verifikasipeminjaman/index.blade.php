@@ -47,6 +47,12 @@
                                 <i class="mdi mdi-filter"></i> Filter
                             </button>
                         </div>
+                           <div class="col-auto">
+                            <a href="{{ route('riwayatpeminjaman.rekap', request()->only(['start_date', 'end_date'])) }}"
+                                class="btn btn-success" target="_blank">
+                                <i class="mdi mdi-file"></i> Rekap
+                            </a>
+                        </div>
 
                     </form>
 
@@ -99,6 +105,12 @@
                                             @endif
 
                                             @if ($peminjaman->status == 'Diverifikasi')
+                                              <form
+                                                    action="{{ route('peminjaman.diambil', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Diambil</button>
                                                 <form
                                                     action="{{ route('peminjaman.batalkan', $peminjaman->peminjaman_id) }}"
                                                     method="POST" class="d-inline">
@@ -125,6 +137,9 @@
                                                     data-bs-target="#modalHapuspeminjaman">
                                                     Hapus
                                                 </button>
+                                            @endif
+                                              @if ($peminjaman->status == 'Diambil')
+                                               -
                                             @endif
 
                                             @if ($peminjaman->status == 'Selesai')

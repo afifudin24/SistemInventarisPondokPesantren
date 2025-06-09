@@ -131,6 +131,15 @@
                                                 <option value="peminjam">Peminjam</option>
                                             </select>
                                         </div>
+
+                                        <div class="mb-3">
+                                            <label for="edit-status" class="form-label">Status:</label>
+                                            <select name="is_active" class="form-select" id="edit-status">
+                                                <option value="">-- Pilih Status --</option>
+                                                <option value="1">Aktif</option>
+                                                <option value="0">Tidak Aktif</option>
+                                            </select>
+                                        </div>
                                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                     </form>
                                 </div>
@@ -147,6 +156,7 @@
                                             <th>Nama</th>
                                             <th>Email</th>
                                             <th>Role</th>
+                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -158,6 +168,13 @@
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->email }}</td>
                                                     <td class="text-capitalize">{{ $user->role }}</td>
+                                                    <td>
+                                                        @if ($user->is_active == 1)
+                                                            <span class="badge bg-success">Aktif</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Tidak Aktif</span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         <button id="buttonDetail" data-user="{{ $user->toJson() }}"
                                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -281,6 +298,7 @@
                     const $nameInput = $('#edit-name');
                     const $emailInput = $('#edit-email');
                     const $roleSelect = $('#edit-role');
+                    const $statusSelect = $('#edit-status');
                     const $btnCloseEditForm = $('#btnCloseEditForm');
                     // Saat tombol edit diklik
                     $('.btnEditUser').on('click', function() {
@@ -289,6 +307,7 @@
                         $nameInput.val(user.name);
                         $emailInput.val(user.email);
                         $roleSelect.val(user.role);
+                        $statusSelect.val(user.is_active);
                         // Set form action
                         $editForm.attr('action', `/datauser/${user.id}`);
                         // Tampilkan form edit

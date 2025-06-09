@@ -24,8 +24,17 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware([RoleMiddleware::class . ':admin,pengurus' ])->group(function () {
     Route::get('/cetakbarang', [BarangController::class, 'cetakPDF']);
+
+
  
     // tambahkan rute lain di sini
+
+    // profil
+
+    Route::get('/profil', [UserController::class,'profil'])->name('profil.index');
+    Route::put('/updateprofil', [UserController::class,'updateprofil'])->name('updateprofil.update');
+    Route::put('/gantipassword', [UserController::class,'gantipassword'])->name('gantipassword.update');
+
 });
 
      
@@ -77,9 +86,10 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
 
         //   riwayatpeminjaman
         Route::get('riwayatpeminjamanbarang', [PeminjamanController::class, 'riwayatPeminjaman'])->name('riwayatpeminjamanbarang.index');
-
+ 
         // pengembalian peminjaman
         Route::post('/pengembalianpeminjamanbarang', [PengembalianController::class, 'store'])->name('pengembalian.store');
+        Route::get('/cetakbuktipengembalian/{id}', [PengembalianController::class, 'cetakBuktiPengembalian'])->name('pengembalian.cetak');
        
 
     });
@@ -87,7 +97,11 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
     Route::middleware(RoleMiddleware::class . ':pengurus,peminjam')->group(function () {
          //   batal peminjaman
         Route::put('/peminjaman/batalkan/{id}', [PeminjamanController::class, 'batalkan'])->name('peminjaman.batalkan');
+        Route::put('/peminjaman/diambil/{id}', [PeminjamanController::class, 'diambil'])->name('peminjaman.diambil');
         Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
+
+        // rekap
+               Route::get('rekappeminjamanbarang', [PeminjamanController::class, 'cetakPDF'])->name('riwayatpeminjaman.rekap');
     });
 
     Route::middleware('role:admin,pemilik')->get('/bersama', function () {

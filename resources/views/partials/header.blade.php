@@ -42,7 +42,7 @@
                 </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item" href="#"><i class="mdi mdi-account me-2 text-primary"></i> Profil </a>
+                <a class="dropdown-item" href="/profil"><i class="mdi mdi-account me-2 text-primary"></i> Profil </a>
                
                 <form action="{{ route('logout') }}" method="POST" class="dropdown-item p-0 m-0">
     @csrf

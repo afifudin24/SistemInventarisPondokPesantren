@@ -151,12 +151,12 @@
                                 <i class="mdi mdi-filter"></i> Filter
                             </button>
                         </div>
-                        <div class="col-auto">
+                        {{-- <div class="col-auto">
                             <a href="{{ route('peminjaman.rekap', request()->only(['jenis', 'start_date', 'end_date'])) }}"
                                 class="btn btn-success" target="_blank">
                                 <i class="mdi mdi-file"></i> Rekap
                             </a>
-                        </div>
+                        </div> --}}
                     </form>
 
                     <div class="table-responsive">

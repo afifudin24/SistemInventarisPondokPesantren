@@ -47,6 +47,12 @@
                                 <i class="mdi mdi-filter"></i> Filter
                             </button>
                         </div>
+                           <div class="col-auto">
+                            <a href="{{ route('riwayatpeminjaman.rekap', request()->only(['start_date', 'end_date'])) }}"
+                                class="btn btn-success" target="_blank">
+                                <i class="mdi mdi-file"></i> Rekap
+                            </a>
+                        </div>
 
                     </form>
 
@@ -84,8 +90,12 @@
                                                 <button class="btn btn-secondary btnDetailPengembalian"
                                                     data-bs-toggle="modal" data-bs-target="#detailModal"
                                                     data-peminjaman='@json($peminjaman)'>
-                                                    Detail Pengembalian
+                                                    <i class="mdi mdi-eye"></i>
                                                 </button>
+                                                @if($peminjaman->pengembalian->status == 'Dikonfirmasi')
+                                                
+                                                    <a target="_blank" href="{{ route('pengembalian.cetak', $peminjaman->pengembalian->pengembalian_id) }}" class="btn btn-info "> <i class="mdi mdi-file"></i> </a>
+                                                @endif
                                             @else
                                                 <button class="btn btn-info btnKembalikan" data-bs-toggle="modal"
                                                     data-bs-target="#modalKembalikan"

@@ -78,12 +78,18 @@
                                         <td>{{ $pengembalian->status }}</td>
 
                                         <td>
+                                            @if ($pengembalian->status == 'Dikonfirmasi')
+                                             
+                                                
+                                                    <a target="_blank" href="{{ route('pengembalian.cetak', $pengembalian->pengembalian_id) }}" class="btn btn-info "> <i class="mdi mdi-file"></i> </a>
+                                         
+                                            @else
                                             <button class="btn btn-info btnKonfirmasi" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal"
                                                 data-pengembalian='@json($pengembalian)'>
                                                 Konfirmasi
                                             </button>
-
+                                            @endif
                                         </td>
 
                                     </tr>
