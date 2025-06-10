@@ -51,6 +51,7 @@
             <tr>
                 <th>No</th>
            
+                <th>Nama Peminjam</th>
                 <th>Nama Barang</th>
                 <th>Tanggal Pinjam</th>
                 <th>Tanggal Kembali</th>
@@ -64,6 +65,7 @@
             <tr>
                 <td>{{ $index + 1 }}</td>
               
+                <td>{{ $item->user->name }}</td>
                 <td>{{ $item->barang->nama_barang }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') }}</td>

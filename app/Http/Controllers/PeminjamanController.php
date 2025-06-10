@@ -26,7 +26,7 @@ class PeminjamanController extends Controller {
     }
 
     public function riwayatPeminjaman() {
-        $peminjamans = Peminjaman::with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->where( 'status',  'Diambil' )->paginate( 10 );
+        $peminjamans = Peminjaman::with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->paginate( 10 );
 
         return view( 'peminjam.riwayatpeminjamanbarang.index', compact( 'peminjamans' ) );
     }

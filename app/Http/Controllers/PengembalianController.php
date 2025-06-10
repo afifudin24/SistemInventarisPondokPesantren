@@ -81,6 +81,7 @@ class PengembalianController extends Controller {
             $barang->jumlah += $pengembalian->jumlah_kembali;
             $barang->save();
             $peminjaman->status = 'Sudah Dikembalikan';
+            $peminjaman->save();
         }
         $pengembalian->kondisi = $request->kondisi;
         $pengembalian->save();

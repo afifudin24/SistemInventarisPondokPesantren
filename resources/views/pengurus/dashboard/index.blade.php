@@ -47,97 +47,180 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-7 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="clearfix">
-                      <h4 class="card-title float-start">Visit And Sales Statistics</h4>
-                      <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-end"></div>
-                    </div>
-                    <canvas id="visit-sale-chart" class="mt-4"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Traffic Sources</h4>
-                    <div class="doughnutjs-wrapper d-flex justify-content-center">
-                      <canvas id="traffic-chart"></canvas>
-                    </div>
-                    <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        
             <div class="row">
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Recent Tickets</h4>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th> Assignee </th>
-                            <th> Subject </th>
-                            <th> Status </th>
-                            <th> Last Update </th>
-                            <th> Tracking ID </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face1.jpg" class="me-2" alt="image"> David Grey
-                            </td>
-                            <td> Fund is not recieved </td>
-                            <td>
-                              <label class="badge badge-gradient-success">DONE</label>
-                            </td>
-                            <td> Dec 5, 2017 </td>
-                            <td> WD-12345 </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face2.jpg" class="me-2" alt="image"> Stella Johnson
-                            </td>
-                            <td> High loading time </td>
-                            <td>
-                              <label class="badge badge-gradient-warning">PROGRESS</label>
-                            </td>
-                            <td> Dec 12, 2017 </td>
-                            <td> WD-12346 </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face3.jpg" class="me-2" alt="image"> Marina Michel
-                            </td>
-                            <td> Website down for one week </td>
-                            <td>
-                              <label class="badge badge-gradient-info">ON HOLD</label>
-                            </td>
-                            <td> Dec 16, 2017 </td>
-                            <td> WD-12347 </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face4.jpg" class="me-2" alt="image"> John Doe
-                            </td>
-                            <td> Loosing control on server </td>
-                            <td>
-                              <label class="badge badge-gradient-danger">REJECTED</label>
-                            </td>
-                            <td> Dec 3, 2017 </td>
-                            <td> WD-12348 </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <h4 class="card-title">Verifikasi Peminjaman Barang</h4>
+                     <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Barang</th>
+                                    <th>Peminjam</th>
+                                    <th>Tanggal Peminjaman</th>
+
+                                    <th>Jumlah</th>
+                                    <th>Status</th>
+
+                                    <th>Aksi</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($peminjamans as $peminjaman)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+
+                                        <td>{{ $peminjaman->barang->nama_barang }}</td>
+                                        <td>{{ $peminjaman->user->name }}</td>
+                                        <td class="text-capitalize">{{ $peminjaman->tanggal_pinjam }}</td>
+                                        <td>{{ $peminjaman->jumlah_pinjam }}</td>
+
+                                        <td>{{ $peminjaman->status }}</td>
+                                        <td>
+                                            @if ($peminjaman->status == 'Menunggu Verifikasi')
+                                                <form
+                                                    action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="Ditolak">
+                                                    <button type="submit" class="btn btn-danger">Tolak</button>
+                                                </form>
+
+                                                <form
+                                                    action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="Diverifikasi">
+                                                    <button type="submit" class="btn btn-success">Verifikasi</button>
+                                                </form>
+                                            @endif
+
+                                            @if ($peminjaman->status == 'Diverifikasi')
+                                              <form
+                                                    action="{{ route('peminjaman.diambil', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Diambil</button>
+                                                <form
+                                                    action="{{ route('peminjaman.batalkan', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-warning">Batalkan</button>
+                                                </form>
+                                            @endif
+
+                                            @if ($peminjaman->status == 'Ditolak')
+                                                <form
+                                                    action="{{ route('peminjaman.updatestatus', $peminjaman->peminjaman_id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="Diverifikasi">
+                                                    <button type="submit" class="btn btn-success">Verifikasi</button>
+                                                </form>
+                                            @endif
+
+                                            @if ($peminjaman->status == 'Dibatalkan')
+                                                <button class="btn btn-danger btnHapuspeminjaman"
+                                                    data-peminjaman='@json($peminjaman)' data-bs-toggle="modal"
+                                                    data-bs-target="#modalHapuspeminjaman">
+                                                    Hapus
+                                                </button>
+                                            @endif
+                                              @if ($peminjaman->status == 'Diambil')
+                                               -
+                                            @endif
+
+                                            @if ($peminjaman->status == 'Selesai')
+                                                -
+                                            @endif
+
+                                        </td>
+
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center">Tidak ada yang perlu diverifikasi.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {{-- konfirmasi pengembalian --}}
+            <div class="row">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Konfirmasi Pengembalian</h4>
+                <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Barang</th>
+                                    <th>Peminjam</th>
+                                    <th>Tanggal Pengembalian</th>
+
+                                    <th>Jumlah</th>
+                                    <th>Status</th>
+
+                                    <th>Aksi</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($pengembalians as $pengembalian)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+
+                                        <td>{{ $pengembalian->peminjaman->barang->nama_barang }}</td>
+                                        <td>{{ $pengembalian->peminjaman->user->name }}</td>
+                                        <td class="text-capitalize">{{ $pengembalian->tanggal_kembali }}</td>
+                                        <td>{{ $pengembalian->peminjaman->jumlah_pinjam }}</td>
+                                        <td>{{ $pengembalian->status }}</td>
+
+                                        <td>
+                                            @if ($pengembalian->status == 'Dikonfirmasi')
+                                             
+                                                
+                                                    <a target="_blank" href="{{ route('pengembalian.cetak', $pengembalian->pengembalian_id) }}" class="btn btn-info "> <i class="mdi mdi-file"></i> </a>
+                                         
+                                            @else
+                                            <button class="btn btn-info btnKonfirmasi" data-bs-toggle="modal"
+                                                data-bs-target="#detailModal"
+                                                data-pengembalian='@json($pengembalian)'>
+                                                Konfirmasi
+                                            </button>
+                                            @endif
+                                        </td>
+
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center">Tidak ada yang perlu dikonfirmasi.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        {!! $pengembalians->links('pagination::bootstrap-5') !!}
+                    </div>
+                 
+                </div>
             </div>
           </div>
           <!-- content-wrapper ends -->

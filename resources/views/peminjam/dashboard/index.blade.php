@@ -47,95 +47,73 @@
                 </div>
               </div>
             </div>
+       
+          
             <div class="row">
-              <div class="col-md-7 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="clearfix">
-                      <h4 class="card-title float-start">Visit And Sales Statistics</h4>
-                      <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-end"></div>
-                    </div>
-                    <canvas id="visit-sale-chart" class="mt-4"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Traffic Sources</h4>
-                    <div class="doughnutjs-wrapper d-flex justify-content-center">
-                      <canvas id="traffic-chart"></canvas>
-                    </div>
-                    <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Recent Tickets</h4>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Peminjaman Belum Dikembalikan</h4>
                     <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th> Assignee </th>
-                            <th> Subject </th>
-                            <th> Status </th>
-                            <th> Last Update </th>
-                            <th> Tracking ID </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face1.jpg" class="me-2" alt="image"> David Grey
-                            </td>
-                            <td> Fund is not recieved </td>
-                            <td>
-                              <label class="badge badge-gradient-success">DONE</label>
-                            </td>
-                            <td> Dec 5, 2017 </td>
-                            <td> WD-12345 </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face2.jpg" class="me-2" alt="image"> Stella Johnson
-                            </td>
-                            <td> High loading time </td>
-                            <td>
-                              <label class="badge badge-gradient-warning">PROGRESS</label>
-                            </td>
-                            <td> Dec 12, 2017 </td>
-                            <td> WD-12346 </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face3.jpg" class="me-2" alt="image"> Marina Michel
-                            </td>
-                            <td> Website down for one week </td>
-                            <td>
-                              <label class="badge badge-gradient-info">ON HOLD</label>
-                            </td>
-                            <td> Dec 16, 2017 </td>
-                            <td> WD-12347 </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src="assets/images/faces/face4.jpg" class="me-2" alt="image"> John Doe
-                            </td>
-                            <td> Loosing control on server </td>
-                            <td>
-                              <label class="badge badge-gradient-danger">REJECTED</label>
-                            </td>
-                            <td> Dec 3, 2017 </td>
-                            <td> WD-12348 </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Barang</th>
+
+                                    <th>Tanggal Peminjaman</th>
+                                    <th>Tanggal Pengembalian</th>
+                                    <th>Jumlah</th>
+
+                                    <th>Aksi</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($peminjamanBelumKembali as $peminjaman)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+
+                                        <td>{{ $peminjaman->barang->nama_barang }}</td>
+
+                                        <td class="text-capitalize">{{ $peminjaman->tanggal_pinjam }}</td>
+                                        <td class="text-capitalize">
+                                            {{ $peminjaman->pengembalian->tanggal_kembali ?? 'Belum dikembalikan' }}
+                                        </td>
+
+                                        <td>{{ $peminjaman->jumlah_pinjam }}</td>
+
+                                        <td>
+                                            @if (isset($peminjaman->pengembalian->peminjaman_id))
+                                                <button class="btn btn-secondary btnDetailPengembalian"
+                                                    data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                    data-peminjaman='@json($peminjaman)'>
+                                                    <i class="mdi mdi-eye"></i>
+                                                </button>
+                                                @if($peminjaman->pengembalian->status == 'Dikonfirmasi')
+                                                
+                                                    <a target="_blank" href="{{ route('pengembalian.cetak', $peminjaman->pengembalian->pengembalian_id) }}" class="btn btn-info "> <i class="mdi mdi-file"></i> </a>
+                                                @endif
+                                            @else
+                                                <button class="btn btn-info btnKembalikan" data-bs-toggle="modal"
+                                                    data-bs-target="#modalKembalikan"
+                                                    data-peminjaman='@json($peminjaman)'>
+                                                    Kembalikan
+                                                </button>
+                                            @endif
+                                        </td>
+
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6">Data Kosong</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
-                  </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        {!! $peminjamanBelumKembali->links('pagination::bootstrap-5') !!}
+                    </div>
                 </div>
               </div>
             </div>
@@ -144,5 +122,5 @@
           <!-- partial:partials/_footer.html -->
 
        
-
+</div>
 @endsection

@@ -86,12 +86,12 @@
                     <td>{{ $barangs->firstItem() + $index }}</td>
                     <td>{{ $barang->nama_barang }}</td>
                     <td>
-                        <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#catatan-{{ $barang->id }}">
+                        <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#catatan-{{ $barang->barang_id }}">
                             Tampilkan
                         </button>
                     </td>
                 </tr>
-                <tr class="collapse" id="catatan-{{ $barang->id }}">
+                <tr class="collapse" id="catatan-{{ $barang->barang_id }}">
                     <td colspan="3">
                         @if($barang->catatanKondisi->count() > 0)
                             <ul>
