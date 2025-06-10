@@ -16,6 +16,7 @@ class UserController extends Controller {
     }
 
     public function store( Request $request ) {
+
         $request->validate( [
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
@@ -123,4 +124,20 @@ class UserController extends Controller {
         $user->save();
         return redirect()->back()->with( 'success', 'Password berhasil diperbarui.' );
     }
+
+public function aktifkan(Request $request)
+{
+    try {
+        $user = User::findOrFail($request->user_id);
+        $user->update([
+            'is_active' => true
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'User berhasil diaktifkan.']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+}
+
+
 }

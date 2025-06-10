@@ -50,6 +50,9 @@
        
           
             <div class="row">
+              <div class="col-12 grid">
+
+             
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Peminjaman Belum Dikembalikan</h4>
@@ -116,6 +119,7 @@
                     </div>
                 </div>
               </div>
+               </div>
             </div>
           </div>
           <!-- content-wrapper ends -->

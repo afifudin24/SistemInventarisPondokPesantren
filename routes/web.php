@@ -59,6 +59,9 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
     Route::post('/transaksibarang', [TransaksiController::class,'store'])->name('transaksibarang.store');
     Route::put('/transaksibarang/{transaksibarang}', [TransaksiController::class,'update'])->name('transaksibarang.update');
     Route::delete('/transaksibarang/{transaksibarang}', [TransaksiController::class,'destroy'])->name('transaksibarang.destroy');
+
+    // aktifkan user
+    Route::post('/user/aktifkan', [UserController::class,'aktifkan'])->name('admin.aktifkan-user');
 });
 
     Route::middleware(RoleMiddleware::class . ':pengurus')->group(function () {

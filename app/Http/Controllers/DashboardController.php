@@ -15,7 +15,10 @@ class DashboardController extends Controller {
             $usercount = User::count();
             $barangcount = Barang::count();
             $transaksicount = Transaksi::count();
-            return view( 'admin.dashboard.index', compact( 'usercount', 'barangcount', 'transaksicount' ) );
+        $users = User::where('is_active', 0)->paginate(10);
+
+            // dd($user);
+            return view( 'admin.dashboard.index', compact( 'usercount', 'barangcount', 'transaksicount', 'users' ) );
         } else if ( $user->role == 'pengurus' ) {
             $barangcount = Barang::count();
             $verifikasiPeminjamanCount = Peminjaman::where( 'status', 'Menunggu Verifikasi' )->count();
