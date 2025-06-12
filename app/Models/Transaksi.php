@@ -8,7 +8,7 @@ class Transaksi extends Model {
     use HasFactory;
     protected $table = 'transaksi';
     protected $primaryKey = 'transaksi_id';
-    public $timestamps = true;
+    public $timestamps = false;
     protected $fillable = [
         'tanggal',
         'barang_id',

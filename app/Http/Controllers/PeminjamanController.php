@@ -189,6 +189,7 @@ class PeminjamanController extends Controller {
             $pdf = Pdf::loadView( 'pengurus.verifikasipeminjaman.cetak', compact( 'peminjaman' ) );
             return $pdf->download( 'rekap-peminjaman.pdf' );
         } else {
+            $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->where('user_id', Auth::user()->id)->get();
             $pdf = Pdf::loadView( 'peminjam.riwayatpeminjamanbarang.cetak', compact( 'peminjaman' ) );
             return $pdf->download( 'rekap-transaksi.pdf' );
             $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->get();

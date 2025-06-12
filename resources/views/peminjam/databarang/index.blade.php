@@ -38,7 +38,7 @@
                     <div class="card">
 
                         {{-- Table Data --}}
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -46,7 +46,7 @@
                                         <th>Kode Barang</th>
                                         <th>Nama Barang</th>
                                         <th>Jumlah</th>
-                                      
+
                                         <th>Aksi</th>
 
                                     </tr>
@@ -58,7 +58,7 @@
                                             <td>{{ $barang->kode_barang }}</td>
                                             <td>{{ $barang->nama_barang }}</td>
                                             <td>{{ $barang->jumlah }}</td>
-                                            
+
                                             <td>
                                                 <button data-bs-toggle="modal" data-bs-target="#detailModal"
                                                     class="btn btn-success btnDetailBarang"

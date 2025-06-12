@@ -21,7 +21,7 @@ class TransaksiController extends Controller {
         }
         $barangs = Barang::all();
         // Paginate hasil ( 10 per halaman )
-        $transaksis = $query->latest()->paginate( 10 )->withQueryString();
+        $transaksis = $query->orderBy( 'tanggal', 'desc' )->paginate( 10 );
 
         return view( 'admin.datatransaksi.index', compact( 'transaksis', 'barangs' ) );
     }

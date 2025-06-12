@@ -36,6 +36,7 @@
                 <tr>
                     <th>No</th>
                     <th>Jenis</th>
+                    <th>Barang</th>
                     <th>Tanggal</th>
                     <th>Catatan</th>
                     <th>Jumlah</th>
@@ -46,6 +47,7 @@
                     <tr>
                         <td>{{ $i + 1 }}</td>
                         <td>{{ ucfirst($transaksi->jenis) }}</td>
+                        <td>{{ $transaksi->barang->nama_barang }}</td>
                         <td>{{ $transaksi->tanggal }}</td>
                         <td>{{ $transaksi->catatan }}</td>
                         <td>{{ $transaksi->jumlah }}</td>

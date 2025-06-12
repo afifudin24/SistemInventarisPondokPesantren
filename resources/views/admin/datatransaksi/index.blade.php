@@ -182,7 +182,7 @@
                         <div class="col-auto">
                             <a href="{{ route('transaksi.rekap', request()->only(['jenis', 'start_date', 'end_date'])) }}"
                                 class="btn btn-success" target="_blank">
-                                <i class="mdi mdi-file"></i> Rekap
+                                <i class="mdi mdi-file"></i> Cetak PDF
                             </a>
                         </div>
                     </form>
@@ -194,6 +194,7 @@
                                     <th>#</th>
 
                                     <th>Tanggal</th>
+                                    <th>Barang</th>
                                     <th>Jenis</th>
                                     <th>Jumlah</th>
 
@@ -208,6 +209,7 @@
                                         <td>{{ $loop->iteration }}</td>
 
                                         <td>{{ $transaksi->tanggal }}</td>
+                                        <td>{{ $transaksi->barang->nama_barang }}</td>
                                         <td class="text-capitalize">{{ $transaksi->jenis }}</td>
                                         <td>{{ $transaksi->jumlah }}</td>
 
