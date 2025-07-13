@@ -8,6 +8,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\CatatanKondisiBarangController;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\UserController;
 Route::get('/', function () {
@@ -25,8 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware([RoleMiddleware::class . ':admin,pengurus,peminjam' ])->group(function () {
     Route::get('/cetakbarang', [BarangController::class, 'cetakPDF']);
 
+    Route::get('/notifikasi/buka/{id}', [NotifikasiController::class, 'buka'])->name('notifikasi.buka');
 
- 
+
+
+
     // tambahkan rute lain di sini
 
     // profil
@@ -37,8 +41,8 @@ Route::middleware('auth')->group(function () {
 
 });
 
-     
-   
+
+
 Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
     // user
     Route::get('/datauser', [UserController::class,'index'])->name('datauser.index');
@@ -46,7 +50,7 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
     // Route::get('/datauser/{user}/edit', [UserController::class,'edit'])->name('datauser.edit');
     Route::put('/datauser/{user}', [UserController::class,'update'])->name('datauser.update');
     Route::delete('/datauser/{user}', [UserController::class,'destroy'])->name('datauser.destroy');
-   
+
     Route::post('/databarang', [BarangController::class,'store'])->name('databarang.store');
     // Route::get('/databarang/{barang}/edit', [BarangController::class,'edit'])->name('databarang.edit');
     Route::put('/databarang/{barang}', [BarangController::class,'update'])->name('databarang.update');
@@ -89,11 +93,11 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
 
         //   riwayatpeminjaman
         Route::get('riwayatpeminjamanbarang', [PeminjamanController::class, 'riwayatPeminjaman'])->name('riwayatpeminjamanbarang.index');
- 
+
         // pengembalian peminjaman
         Route::post('/pengembalianpeminjamanbarang', [PengembalianController::class, 'store'])->name('pengembalian.store');
         //Route::get('/cetakbuktipengembalian/{id}', [PengembalianController::class, 'cetakBuktiPengembalian'])->name('pengembalian.cetak');
-       
+
 
     });
 

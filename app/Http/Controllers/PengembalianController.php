@@ -65,6 +65,17 @@ class PengembalianController extends Controller {
         // Simpan path
         $pengembalian->save();
 
+        Notifikasi::create([
+            'jenis' => 'pengembalian_barang',
+            'user_id' => $peminjaman->user_id,
+            'user_role' => 'pengurus',
+            'pesan' => $peminjaman->barang->nama_barang.' telah dikembalikan',
+            'is_read' => false,
+            'tanggal' => now(),
+            'link' => '/konfirmasipengembalianbarang'
+        ]);
+
+
         return redirect()->route( 'riwayatpeminjamanbarang.index' )->with( 'success', 'Pengembalian berhasil disimpan, silahkan menunggu konfirmasi.' );
 
     }

@@ -98,9 +98,27 @@ class PeminjamanController extends Controller {
         $peminjaman = Peminjaman::where( 'peminjaman_id', $id )->first();
         $barang = Barang::where( 'barang_id', $peminjaman->barang_id )->first();
         if ( $request->status === 'Diverifikasi' ) {
+            Notifikasi::create([
+                'jenis' => 'peminjaman_barang',
+                'user_id' => $peminjaman->user_id,
+                'user_role' => 'peminjam',
+                'pesan' => 'Peminjaman'.$barang->nama_barang.' telah diverifikasi',
+                'is_read' => false,
+                'tanggal' => now(),
+                'link' => '/ajuanpeminjamanbarang'
+            ]);
 
             $barang->save();
         }
+        Notifikasi::create([
+            'jenis' => 'peminjaman_barang',
+            'user_id' => $peminjaman->user_id,
+            'user_role' => 'peminjam',
+            'pesan' => 'Peminjaman'.$barang->nama_barang.' telah ditolak',
+            'is_read' => false,
+            'tanggal' => now(),
+            'link' => '/ajuanpeminjamanbarang'
+        ]);
 
         $peminjaman = Peminjaman::findOrFail( $id );
         $peminjaman->status = $request->status;
@@ -126,6 +144,16 @@ class PeminjamanController extends Controller {
         $barang->save();
         $peminjaman->status = 'Dibatalkan';
         $peminjaman->save();
+        Notifikasi::create([
+            'jenis' => 'peminjaman_batal',
+            'user_id' => $peminjaman->user_id,
+            'user_role' => 'pengurus',
+            'pesan' => 'Peminjaman'.$barang->nama_barang.' telah dibatalkan',
+            'is_read' => false,
+            'tanggal' => now(),
+            'link' => '/verifikasipeminjamanbarang'
+        ]);
+
 
         return back()->with( 'success', 'Peminjaman berhasil dibatalkan.' );
     }
@@ -143,6 +171,16 @@ class PeminjamanController extends Controller {
         }
         $barang = Barang::where( 'barang_id', $peminjaman->barang_id )->first();
         $barang->jumlah = $barang->jumlah -= $peminjaman->jumlah_pinjam;
+        $namauser = User::where( 'id', $peminjaman->user_id )->first();
+        Notifikasi::create([
+            'jenis' => 'peminjaman_barang',
+            'user_id' => $user->id,
+            'user_role' => 'pengurus',
+            'pesan' => $barang->nama_barang.' telah diambil oleh '.$namauser->name,
+            'is_read' => false,
+            'tanggal' => now(),
+            'link' => '/verifikasipeminjamanbarang'
+        ]);
 
         // $barang->jumlah = $barang->jumlah += $peminjaman->jumlah_pinjam;
         $barang->save();

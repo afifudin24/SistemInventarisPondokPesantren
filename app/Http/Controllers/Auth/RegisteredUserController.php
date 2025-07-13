@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Notifikasi;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,6 +41,16 @@ class RegisteredUserController extends Controller {
             'password' => Hash::make( $request->password ),
             'is_active' => false
         ] );
+        Notifikasi::create([
+            'jenis' => 'user_baru',
+            'user_id' => $user->id,
+            'user_role' => 'admin',
+            'pesan' => 'Ada user baru menunggu aktivasi.',
+            'is_read' => false,
+            'tanggal' => now(),
+            'link' => '/datauser'
+        ]);
+
 
         event( new Registered( $user ) );
 
