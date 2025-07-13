@@ -176,9 +176,9 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <button id="buttonDetail" data-user="{{ $user->toJson() }}"
+                                                        <button data-user='@json($user)'
                                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                            class="btn btn-info">Detail</button>
+                                                            class="btn buttonDetail btn-info">Detail</button>
                                                         <button class="btn btn-warning btnEditUser"
                                                             data-user="{{ $user->toJson() }}">
                                                             Edit
@@ -274,7 +274,7 @@
         </div>
         @push('scripts')
             <script>
-                $(document).ready(function() {
+                
                     // form user 
                     const btnShowForm = document.getElementById('btnShowForm');
                     const btnCloseForm = document.getElementById('btnCloseForm');
@@ -285,7 +285,8 @@
                     btnCloseForm.addEventListener('click', function() {
                         formSection.style.display = 'none';
                     });
-                    $('#buttonDetail').click(function() {
+                    $('.buttonDetail').click(function() {
+                        console.log("okebanget");
                         var user = $(this).data('user');
                         console.log(user);
                         $('#recipient-name').val(user.name);
@@ -328,7 +329,7 @@
                         // Set form action ke /datauser/{id}
                         $('#formHapusUser').attr('action', `/datauser/${user.id}`);
                     });
-                });
+               
             </script>
         @endpush
     @endsection

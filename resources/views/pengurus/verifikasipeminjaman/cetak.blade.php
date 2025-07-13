@@ -71,7 +71,8 @@
                 <td>{{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') }}</td>
                 <td>{{ $item->keperluan ?? '-' }}</td>
                 <td>{{ ucfirst($item->status) }}</td>
-                <td>{{ ucfirst($item->pengembalian->status) }}</td>
+               <td>{{ ucfirst(optional($item->pengembalian)->status) ?? '-' }}</td>
+
             </tr>
             @endforeach
         </tbody>

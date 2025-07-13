@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
      // barang
     Route::get('/databarang', [BarangController::class,'index'])->name('databarang.index');
 
-    Route::middleware([RoleMiddleware::class . ':admin,pengurus' ])->group(function () {
+    Route::middleware([RoleMiddleware::class . ':admin,pengurus,peminjam' ])->group(function () {
     Route::get('/cetakbarang', [BarangController::class, 'cetakPDF']);
 
 
@@ -92,7 +92,7 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
  
         // pengembalian peminjaman
         Route::post('/pengembalianpeminjamanbarang', [PengembalianController::class, 'store'])->name('pengembalian.store');
-        Route::get('/cetakbuktipengembalian/{id}', [PengembalianController::class, 'cetakBuktiPengembalian'])->name('pengembalian.cetak');
+        //Route::get('/cetakbuktipengembalian/{id}', [PengembalianController::class, 'cetakBuktiPengembalian'])->name('pengembalian.cetak');
        
 
     });
@@ -102,7 +102,7 @@ Route::middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::put('/peminjaman/batalkan/{id}', [PeminjamanController::class, 'batalkan'])->name('peminjaman.batalkan');
         Route::put('/peminjaman/diambil/{id}', [PeminjamanController::class, 'diambil'])->name('peminjaman.diambil');
         Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
-
+    Route::get('/cetakbuktipengembalian/{id}',[PengembalianController::class, 'cetakBuktiPengembalian'])->name('pengembalian.cetak');
         // rekap
                Route::get('rekappeminjamanbarang', [PeminjamanController::class, 'cetakPDF'])->name('riwayatpeminjaman.rekap');
     });

@@ -166,6 +166,7 @@
                                     <th>#</th>
                                     <th>Barang</th>
                                     <th>Tanggal Peminjaman</th>
+                                    <th>Keperluan</th>
 
                                     <th>Jumlah</th>
                                     <th>Status</th>
@@ -181,6 +182,7 @@
 
                                         <td>{{ $peminjaman->barang->nama_barang }}</td>
                                         <td class="text-capitalize">{{ $peminjaman->tanggal_pinjam }}</td>
+                                          <td class="text-capitalize">{{ $peminjaman->keperluan }}</td>
                                         <td>{{ $peminjaman->jumlah_pinjam }}</td>
 
                                         <td>{{ $peminjaman->status }}</td>

@@ -81,6 +81,7 @@
         <thead>
             <tr>
                 <th>Nama Barang</th>
+                <th>Keperluan</th>
                 <th>Jumlah</th>
                 <th>Keterangan</th>
             </tr>
@@ -90,6 +91,7 @@
                 <tr>
                  
                     <td>{{ $peminjaman->barang->nama_barang }}</td>
+                    <td>{{$peminjaman->keperluan}}</td>
                     <td class="text-center">{{ $peminjaman->jumlah_pinjam }}</td>
                     <td>{{ $detail->keterangan ?? '-' }}</td>
                 </tr>
