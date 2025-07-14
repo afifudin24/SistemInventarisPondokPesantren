@@ -35,10 +35,16 @@
           <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item dropdown">
         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-          <i class="mdi mdi-bell mx-0"></i>
-          <span class="count">{{$notifikasi->count()}}</span>
+            @if($notifikasi->count() > 0)
+          <i class="mdi mdi-bell text-primary mx-0"></i>
+           <span class="count text-primary">{{$notifikasi->count()}}</span>
+          @else 
+          <i class="mdi mdi-bell  mx-0"></i>
+           <span class="count">{{$notifikasi->count()}}</span>
+          @endif
+         
         </a>
-    <div class="dropdown-menu navbar-dropdown preview-list " style="margin-left: -100px" aria-labelledby="notificationDropdown">
+    <div class="dropdown-menu navbar-dropdown preview-list " style="margin-left: -150px" aria-labelledby="notificationDropdown">
           <p class="mb-0 font-weight-normal float-left dropdown-header">Notifikasi</p>
           @if($notifikasi->count() > 0)
   @foreach($notifikasi as $nt)
@@ -54,6 +60,116 @@
           <p class="font-weight-light small-text mb-0 text-muted">{{ $nt->tanggal }}</p>
         </div>
       </a>
+      @elseif($nt->jenis == 'peminjaman')
+      <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-info">
+                <i class="ti-arrow-right mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+          @elseif($nt->jenis == 'pengembalian')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-success">
+                <i class="ti-arrow-left mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+          @elseif($nt->jenis == 'peminjaman_ditolak')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-danger">
+                <i class="ti-close mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+            @elseif($nt->jenis == 'peminjaman_batal')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-danger">
+                <i class="ti-close mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+          @elseif($nt->jenis == 'verifikasi_peminjaman')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-success">
+                <i class="ti-check mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+          @elseif($nt->jenis == 'pengembalian_ditolak')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-danger">
+                <i class="ti-close mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+          @elseif($nt->jenis == 'konfirmasi_pengembalian')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-success">
+                <i class="ti-check mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+            @elseif($nt->jenis == 'pengembalian_selesai')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-success">
+                <i class="ti-check mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+           @elseif($nt->jenis == 'pengembalian_tidak_sesuai')
+          <a class="dropdown-item preview-item" href="/notifikasi/buka/{{$nt->id}}">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-danger">
+                <i class="ti-times mx-0"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject font-weight-normal">{{$nt->pesan}}</h6>
+              <p class="font-weight-light small-text mb-0 text-muted"> {{$nt->tanggal}} </p>
+            </div>
+          </a>
+         
+         
     @endif
   @endforeach
 @else

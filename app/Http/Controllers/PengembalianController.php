@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengembalian;
+use App\Models\Notifikasi;
 use App\Models\Peminjaman;
 use App\Models\Barang;
 // use auth
@@ -65,16 +66,15 @@ class PengembalianController extends Controller {
         // Simpan path
         $pengembalian->save();
 
-        Notifikasi::create([
-            'jenis' => 'pengembalian_barang',
+        Notifikasi::create( [
+            'jenis' => 'pengembalian',
             'user_id' => $peminjaman->user_id,
             'user_role' => 'pengurus',
             'pesan' => $peminjaman->barang->nama_barang.' telah dikembalikan',
             'is_read' => false,
             'tanggal' => now(),
             'link' => '/konfirmasipengembalianbarang'
-        ]);
-
+        ] );
 
         return redirect()->route( 'riwayatpeminjamanbarang.index' )->with( 'success', 'Pengembalian berhasil disimpan, silahkan menunggu konfirmasi.' );
 
@@ -88,11 +88,29 @@ class PengembalianController extends Controller {
         $pengembalian->status = $request->status;
         if ( $pengembalian->jumlah_kembali < $pengembalian->peminjaman->jumlah_pinjam ) {
             $pengembalian->status = 'Tidak Sesuai';
+            Notifikasi::create( [
+                'jenis' => 'pengembalian_tidak_sesuai',
+                'user_id' => $peminjaman->user_id,
+                'user_role' => 'peminjam',
+                'pesan' => 'Pengembalian '. $peminjaman->barang->nama_barang.' tidak sesuai',
+                'is_read' => false,
+                'tanggal' => now(),
+                'link' => '/riwayatpeminjamanbarang'
+            ] );
         } else {
             $barang->jumlah += $pengembalian->jumlah_kembali;
             $barang->save();
             $peminjaman->status = 'Sudah Dikembalikan';
             $peminjaman->save();
+            Notifikasi::create( [
+                'jenis' => 'pengembalian_selesai',
+                'user_id' => $peminjaman->user_id,
+                'user_role' => 'peminjam',
+                'pesan' => 'Pengembalian '. $peminjaman->barang->nama_barang.' selesai',
+                'is_read' => false,
+                'tanggal' => now(),
+                'link' => '/riwayatpeminjamanbarang'
+            ] );
         }
         $pengembalian->kondisi = $request->kondisi;
         $pengembalian->save();

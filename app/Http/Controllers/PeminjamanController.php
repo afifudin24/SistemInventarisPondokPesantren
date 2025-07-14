@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
+use App\Models\Notifikasi;
 use App\Models\Barang;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -70,6 +71,16 @@ class PeminjamanController extends Controller {
         $peminjaman->tanggal_pinjam = Carbon::today();
         $peminjaman->save();
 
+        Notifikasi::create( [
+            'jenis' => 'peminjaman',
+            'user_id' => $peminjaman->user_id,
+            'user_role' => 'pengurus',
+            'pesan' => 'Peminjaman baru',
+            'is_read' => false,
+            'tanggal' => now(),
+            'link' => '/verifikasipeminjamanbarang'
+        ] );
+
         return redirect()->route( 'peminjaman.index' )
         ->with( 'success', 'Data peminjaman berhasil ditambahkan.' );
     }
@@ -98,27 +109,29 @@ class PeminjamanController extends Controller {
         $peminjaman = Peminjaman::where( 'peminjaman_id', $id )->first();
         $barang = Barang::where( 'barang_id', $peminjaman->barang_id )->first();
         if ( $request->status === 'Diverifikasi' ) {
-            Notifikasi::create([
-                'jenis' => 'peminjaman_barang',
+            Notifikasi::create( [
+                'jenis' => 'verifikasi_peminjaman',
                 'user_id' => $peminjaman->user_id,
                 'user_role' => 'peminjam',
                 'pesan' => 'Peminjaman'.$barang->nama_barang.' telah diverifikasi',
                 'is_read' => false,
                 'tanggal' => now(),
                 'link' => '/ajuanpeminjamanbarang'
-            ]);
+            ] );
 
             $barang->save();
+        } else {
+
+            Notifikasi::create( [
+                'jenis' => 'peminjaman_ditolak',
+                'user_id' => $peminjaman->user_id,
+                'user_role' => 'peminjam',
+                'pesan' => 'Peminjaman'.$barang->nama_barang.' telah ditolak',
+                'is_read' => false,
+                'tanggal' => now(),
+                'link' => '/ajuanpeminjamanbarang'
+            ] );
         }
-        Notifikasi::create([
-            'jenis' => 'peminjaman_barang',
-            'user_id' => $peminjaman->user_id,
-            'user_role' => 'peminjam',
-            'pesan' => 'Peminjaman'.$barang->nama_barang.' telah ditolak',
-            'is_read' => false,
-            'tanggal' => now(),
-            'link' => '/ajuanpeminjamanbarang'
-        ]);
 
         $peminjaman = Peminjaman::findOrFail( $id );
         $peminjaman->status = $request->status;
@@ -144,7 +157,7 @@ class PeminjamanController extends Controller {
         $barang->save();
         $peminjaman->status = 'Dibatalkan';
         $peminjaman->save();
-        Notifikasi::create([
+        Notifikasi::create( [
             'jenis' => 'peminjaman_batal',
             'user_id' => $peminjaman->user_id,
             'user_role' => 'pengurus',
@@ -152,8 +165,7 @@ class PeminjamanController extends Controller {
             'is_read' => false,
             'tanggal' => now(),
             'link' => '/verifikasipeminjamanbarang'
-        ]);
-
+        ] );
 
         return back()->with( 'success', 'Peminjaman berhasil dibatalkan.' );
     }
@@ -172,7 +184,7 @@ class PeminjamanController extends Controller {
         $barang = Barang::where( 'barang_id', $peminjaman->barang_id )->first();
         $barang->jumlah = $barang->jumlah -= $peminjaman->jumlah_pinjam;
         $namauser = User::where( 'id', $peminjaman->user_id )->first();
-        Notifikasi::create([
+        Notifikasi::create( [
             'jenis' => 'peminjaman_barang',
             'user_id' => $user->id,
             'user_role' => 'pengurus',
@@ -180,7 +192,7 @@ class PeminjamanController extends Controller {
             'is_read' => false,
             'tanggal' => now(),
             'link' => '/verifikasipeminjamanbarang'
-        ]);
+        ] );
 
         // $barang->jumlah = $barang->jumlah += $peminjaman->jumlah_pinjam;
         $barang->save();
@@ -227,7 +239,7 @@ class PeminjamanController extends Controller {
             $pdf = Pdf::loadView( 'pengurus.verifikasipeminjaman.cetak', compact( 'peminjaman' ) );
             return $pdf->download( 'rekap-peminjaman.pdf' );
         } else {
-            $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->where('user_id', Auth::user()->id)->get();
+            $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->get();
             $pdf = Pdf::loadView( 'peminjam.riwayatpeminjamanbarang.cetak', compact( 'peminjaman' ) );
             return $pdf->download( 'rekap-transaksi.pdf' );
             $peminjaman = $query->with( 'pengembalian' )->with( 'user' )->where( 'user_id', Auth::user()->id )->get();
